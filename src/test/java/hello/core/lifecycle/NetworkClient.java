@@ -1,6 +1,10 @@
 package hello.core.lifecycle;
 
-public class NetworkClient {
+import lombok.Builder;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
+public class NetworkClient implements InitializingBean, DisposableBean {
 
     private String url;
 
@@ -29,5 +33,19 @@ public class NetworkClient {
     public void disconnect() {
         System.out.println("close = " + url);
 
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception { //스프링 의존관계 끝나고 세팅해줌
+        System.out.println("afterPropertiesSet");
+        connect();
+        call("초기화 연결 메시지");
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("destroy");
+        System.out.println("url = " + url);
+        disconnect();
     }
 }
